@@ -40,6 +40,48 @@ def raw_meal_info() -> pd.DataFrame:
     return pd.read_csv(path)
 
 
+@cache
+def smartwatch_feasibility() -> pd.DataFrame:
+    """
+    Get a dataframe of smartwatch feasibility data
+
+    """
+    path = pathlib.Path(_userconf()["seaco_dir"]) / _conf()["feasibility_info"]
+    return pd.read_stata(path)
+
+
+def add_timedelta(meal_info: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add a column showing the delta between watch distribution date and entry date
+    to a dataframe
+
+    Also adds Datetime, residents_id column
+
+    """
+    feasibility_info = smartwatch_feasibility()
+
+    # We only care about ones who consented to the smartwatch study
+    feasibility_info = feasibility_info[feasibility_info["smartwatchwilling"] == 1]
+    feasibility_info = feasibility_info[["residents_id", "actualdateofdistribution1st"]]
+
+    # Join dataframes
+    meal_info = (
+        meal_info.reset_index()
+        .merge(feasibility_info, left_on="p_id", right_on="residents_id", how="left")
+        .set_index(meal_info.index)
+    )
+
+    meal_info["delta"] = (
+        meal_info.index.to_series() - meal_info["actualdateofdistribution1st"]
+    )
+
+    assert (meal_info["residents_id"] == meal_info["p_id"]).all()
+
+    return meal_info.drop(
+        columns=["Datetime", "residents_id", "actualdateofdistribution1st"]
+    )
+
+
 def _datetime(meal_info: pd.DataFrame) -> pd.Series:
     """
     Get a series representing the timestamp
