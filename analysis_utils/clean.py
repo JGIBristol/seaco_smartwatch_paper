@@ -392,7 +392,7 @@ def clean_meal_info(
 
     # Add Ramadan info
     # Whether each entry was within Ramadan
-    retval["entry_in_ramadan"] = util.in_ramadan_2022(retval.index, verbose=verbose)
+    retval["entry_in_ramadan"] = in_ramadan_2022(retval.index, verbose=verbose)
 
     # Whether the participants period was within Ramadan
     ramadan_info = _ramadan_info(retval, verbose=verbose)
