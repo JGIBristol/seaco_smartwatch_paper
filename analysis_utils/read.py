@@ -126,3 +126,12 @@ def all_meal_info(*, verbose=False) -> pd.DataFrame:
     retval = retval[[col for col in retval if col not in {"firstdate", "lastdate"}]]
 
     return retval
+
+
+def survey_info() -> pd.DataFrame:
+    """
+    Get survey info
+
+    """
+    path = pathlib.Path(_userconf()["seaco_dir"]) / _conf()["questionnaire"]
+    return pd.read_csv(path)
