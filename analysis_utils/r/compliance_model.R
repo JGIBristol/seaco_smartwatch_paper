@@ -22,7 +22,7 @@ plot_and_save <- function(model, filename, title) {
     plot <- plot_model(model, type = "pred", terms = "day", show.rug = FALSE, ci.lvl = 0.95)
 
     plot <- plot + geom_point(data = rate, aes(x = rate$day, y = rate$percentage_yes / 100), color = "#653D9BC4")
-    plot <- plot + scale_y_continuous(limits = c(0.0, 1.0), label = percent_format(accuracy = 10))
+    plot <- plot + scale_y_continuous(limits = c(0.0, 1.1), label = percent_format(accuracy = 10))
     plot <- plot + ggtitle(title)
 
     ggsave(filename, plot)
