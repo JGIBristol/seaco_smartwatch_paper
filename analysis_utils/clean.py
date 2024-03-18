@@ -302,6 +302,18 @@ def remove_catchups(meal_info: pd.DataFrame) -> pd.DataFrame:
     keep_mask = meal_info["catchup_flag"] == False
     keep_mask &= ~catchups_mask(meal_info)
 
+    # Also remove no responses at 8am, since these are entries where the participant ignored the catch up prompt
+    # This is where the time is within 15min of 8am
+    index_datetime = pd.to_datetime(meal_info.index)
+    time_diff = pd.Series(
+        (index_datetime - index_datetime.normalize() - pd.to_timedelta("08:00:00")),
+        index=meal_info.index,
+    ).abs()
+    discard = (time_diff < pd.Timedelta("15min")) & (
+        meal_info["meal_type"] == "No response"
+    )
+    keep_mask &= ~discard
+
     return meal_info[keep_mask]
 
 
