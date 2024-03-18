@@ -61,7 +61,7 @@ plot_individual_pids <- function(model, filename, title) {
     ggsave(filename, plot)
 }
 plot_individual_pids(random_intercept, paste0(plots_dir, "random_intercepts_all.png"), "Random Intercepts")
-plot_individual_pids(random_both, paste0(plots_dir, "random_pids_fit_all.png"), "Random Intercepts and Slopes")
+plot_individual_pids(random_both, paste0(plots_dir, "random_pids_fit_all.png"), "Overall Response Rate")
 
 
 # Plot histograms
