@@ -27,7 +27,8 @@ plot_and_save <- function(model, filename, title) {
     plot <- plot_model(model, type = "pred", terms = "day", show.rug = FALSE, ci.lvl = 0.95)
 
     plot <- plot + geom_point(data = percentage_yes, aes(x = day, y = percentage_yes / 100), color = "#653D9BC4")
-    plot <- plot + scale_y_continuous(limits = c(0.0, 1.0), label = percent_format(accuracy = 10))
+    plot <- plot + scale_y_continuous(limits = c(0.0, 1.0), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1))
+    plot <- plot + scale_x_continuous(breaks = seq(1, 7, 1))
     plot <- plot + ggtitle(title)
 
     ggsave(filename, plot)
@@ -35,7 +36,7 @@ plot_and_save <- function(model, filename, title) {
 
 plot_and_save(fixed_only, paste0(plots_dir, "fixed_only_fit.png"), "Fixed Effects Only")
 plot_and_save(random_intercept, paste0(plots_dir, "random_intercepts_fit.png"), "Random Intercepts")
-plot_and_save(random_both, paste0(plots_dir, "random_intercept_and_slope_fit.png"), "Random Intercepts and Slopes")
+plot_and_save(random_both, paste0(plots_dir, "random_intercept_and_slope_fit.png"), "Completion Rate")
 
 plot_individual_pids <- function(model, filename, title) {
     # Create a new data frame with the unique days and p_ids

@@ -24,7 +24,8 @@ plot_and_save <- function(model, covariate, filename, legend) {
         geom_line(data = sjp_data, aes(x = x, y = predicted, color = group_col)) +
         geom_ribbon(data = sjp_data, aes(x = x, ymin = conf.low, ymax = conf.high, fill = group_col), alpha = 0.1) +
         geom_point(data = percentage_yes, aes(x = day, y = percentage_yes / 100), color = "black") +
-        scale_y_continuous(limits = c(0.0, 1.0), label = scales::percent_format(accuracy = 1)) +
+        scale_y_continuous(limits = c(0.0, 1.0), label = scales::percent_format(accuracy = 1), breaks = seq(0, 1, 0.1)) +
+        scale_x_continuous(breaks = seq(1, 7, 1)) +
         labs(color = covariate, fill = covariate) +
         xlab("Day")
 
