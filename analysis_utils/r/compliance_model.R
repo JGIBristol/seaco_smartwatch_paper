@@ -22,7 +22,8 @@ plot_and_save <- function(model, filename, title) {
     plot <- plot_model(model, type = "pred", terms = "day", show.rug = FALSE, ci.lvl = 0.95)
 
     plot <- plot + geom_point(data = rate, aes(x = rate$day, y = rate$percentage_yes / 100), color = "#653D9BC4")
-    plot <- plot + scale_y_continuous(limits = c(0.0, 1.1), label = percent_format(accuracy = 10))
+    plot <- plot + scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1))
+    plot <- plot + scale_x_continuous(breaks = seq(1, 7, 1))
     plot <- plot + ggtitle(title)
 
     ggsave(filename, plot)
@@ -54,3 +55,6 @@ plot_individual_pids <- function(model, filename, title) {
     ggsave(filename, plot)
 }
 plot_individual_pids(model, paste0(plots_dir, "compliance_fit_all_pids.png"), "Compliance Rate")
+
+out_file <- paste0(plots_dir, "compliance_summary.txt")
+capture.output(summary(model), file = out_file)
