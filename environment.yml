@@ -1,0 +1,16 @@
+name: seaco_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10.0
+  - pandas=2.2.0
+  - matplotlib=3.5.1
+  - ipykernel=6.29.0
+  - pyyaml=6.0.2
+  - r-base=4.2.2
+  - r-tidyverse
+  - r-sjPlot
+  - r-lmerTest
+  - r-lme4
+  - pip

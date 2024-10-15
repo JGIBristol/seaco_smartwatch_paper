@@ -1,0 +1,8 @@
+# You probably shouldn't change this file
+# User-defined config is in userconf.yaml
+
+# ==== Filepaths
+# These live on RDSF; relative to the directory where the RDSF project is mounted
+questionnaire: "SEACO data/SEACO-CH20 qnaire data/SEACO_CH20_17082022_de_id.csv"
+meal_info: "SEACO data/SEACO-CH20_Smartwatch_data/New_files/combine_csv_file.csv"
+feasibility_info: "SEACO data/Stata Datasets/SEACO-CH20 smartwatch feasibility- for LJ.dta"
