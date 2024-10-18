@@ -43,6 +43,24 @@ plot_sex_model <- function(model, file_prefix, y_label) {
   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
 }
 
+plot_age_model <- function(model, file_prefix, y_label) {
+  df <- ggpredict(model, terms = c("day", "age_group"))
+
+  plot <- ggplot(df, aes(x, predicted)) +
+    geom_line(aes(linetype = group, color = group)) +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
+    xlab("Study Day") +
+    ylab(y_label) +
+    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
+    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Children", "1" = "Adolescents")) +
+    labs(fill = "", color = "", linetype = "") +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(1, 7, 1))
+
+  ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
+}
+
 plot_day_model <- function(model, file_prefix, y_label) {
   terms <- c("day")
 
@@ -72,6 +90,14 @@ compliance_sex_model <- fit_model(
 )
 plot_sex_model(compliance_sex_model, "compliance_sex", "Compliance Rate")
 
+# Compliance model with age as a covariate
+compliance_age_model <- fit_model(
+  cbind(n_responses, PROMPTS_PER_DAY - n_responses) ~ day * age_group + (1 + day | p_id),
+  model_df,
+  "compliance_age"
+)
+plot_age_model(compliance_age_model, "compliance_age", "Compliance Rate")
+
 # Completion model
 completion_model <- fit_model(
   cbind(n_responses, n_prompts - n_responses) ~ day + (1 + day | p_id),
@@ -87,3 +113,11 @@ completion_sex_model <- fit_model(
   "completion_sex"
 )
 plot_sex_model(completion_sex_model, "completion_sex", "Completion Rate")
+
+# Completion model with age as a covariate
+completion_age_model <- fit_model(
+  cbind(n_responses, n_prompts - n_responses) ~ day * age_group + (1 + day | p_id),
+  model_df,
+  "completion_age"
+)
+plot_age_model(completion_age_model, "completion_age", "Completion Rate")
