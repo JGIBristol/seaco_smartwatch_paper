@@ -19,13 +19,13 @@ dir.create(PLOTS_DIR, showWarnings = TRUE)
 model_df <- read_csv("outputs/data/compliance.csv")
 
 fit_model <- function(formula, data, file_prefix) {
-    model <- glmer(formula, data = data, family = binomial)
-    capture.output(summary(model), file = paste0(PLOTS_DIR, file_prefix, "_model.txt"))
-    return(model)
+  model <- glmer(formula, data = data, family = binomial)
+  capture.output(summary(model), file = paste0(PLOTS_DIR, file_prefix, "_model.txt"))
+  return(model)
 }
 
-create_plot <- function(model, terms, file_prefix, y_label) {
-  plot <- plot_model(model, type = "pred", terms = terms, show.rug = FALSE, ci.lvl = 0.95) +
+plot_sex_model <- function(model, file_prefix, y_label) {
+  plot <- plot_model(model, type = "pred", terms = c("day", "sex"), show.rug = FALSE, ci.lvl = 0.95) +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1)) +
     ggtitle("") +
@@ -37,13 +37,26 @@ create_plot <- function(model, terms, file_prefix, y_label) {
   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
 }
 
+plot_day_model <- function(model, file_prefix, y_label) {
+  terms <- c("day")
+
+  plot <- plot_model(model, type = "pred", terms = terms, show.rug = FALSE, ci.lvl = 0.95) +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(1, 7, 1)) +
+    ggtitle("") +
+    xlab("Study Day") +
+    ylab(y_label) +
+    labs(fill = "", color = "")
+  ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
+}
+
 # Compliance model
 compliance_model <- fit_model(
   cbind(n_responses, PROMPTS_PER_DAY - n_responses) ~ day + (1 + day | p_id),
   model_df,
   "compliance"
 )
-create_plot(compliance_model, "day", "compliance", "Compliance Rate")
+plot_day_model(compliance_model, "compliance", "Compliance Rate")
 
 # Compliance with sex as a covariate
 compliance_sex_model <- fit_model(
@@ -51,7 +64,7 @@ compliance_sex_model <- fit_model(
   model_df,
   "compliance_sex"
 )
-create_plot(compliance_sex_model, c("day", "sex"), "compliance_sex", "Compliance Rate")
+plot_sex_model(compliance_sex_model, "compliance_sex", "Compliance Rate")
 
 # Completion model
 completion_model <- fit_model(
@@ -59,7 +72,7 @@ completion_model <- fit_model(
   model_df,
   "completion"
 )
-create_plot(completion_model, "day", "completion", "Completion Rate")
+plot_day_model(completion_model, "completion", "Completion Rate")
 
 # Completion with sex as a covariate
 completion_sex_model <- fit_model(
@@ -67,4 +80,4 @@ completion_sex_model <- fit_model(
   model_df,
   "completion_sex"
 )
-create_plot(completion_sex_model, c("day", "sex"), "completion_sex", "Completion Rate")
+plot_sex_model(completion_sex_model, "completion_sex", "Completion Rate")
