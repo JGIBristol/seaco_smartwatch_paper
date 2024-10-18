@@ -1,4 +1,5 @@
 library(lme4)
+library(ggeffects)
 library(tidyverse)
 library(sjPlot)
 library(dplyr)
@@ -25,22 +26,27 @@ fit_model <- function(formula, data, file_prefix) {
 }
 
 plot_sex_model <- function(model, file_prefix, y_label) {
-  plot <- plot_model(model, type = "pred", terms = c("day", "sex"), show.rug = FALSE, ci.lvl = 0.95) +
-    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
-    scale_x_continuous(breaks = seq(1, 7, 1)) +
-    ggtitle("") +
+  df <- ggpredict(model, terms = c("day", "sex"))
+
+  plot <- ggplot(df, aes(x, predicted)) +
+    geom_line(aes(linetype = group, color = group)) +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
     xlab("Study Day") +
     ylab(y_label) +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
-    labs(fill = "", color = "")
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
+    labs(fill = "", color = "", linetype = "") +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(1, 7, 1))
+
   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
 }
 
 plot_day_model <- function(model, file_prefix, y_label) {
   terms <- c("day")
 
-  plot <- plot_model(model, type = "pred", terms = terms, show.rug = FALSE, ci.lvl = 0.95) +
+  plot <- plot_model(model, type = "pred", terms = terms, show.rug = FALSE, ci_lvl = 0.95) +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1)) +
     ggtitle("") +
