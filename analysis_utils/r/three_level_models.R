@@ -15,11 +15,13 @@ dir.create(PLOTS_DIR, showWarnings = TRUE)
 # This is a CSV that just tells us whether the prompt sent to a participant was responded to or not
 model_df <- read_csv("outputs/data/three_level_data.csv")
 model_df <- data.frame(model_df)
-# model_df$hour <- factor(model_df$hour, levels = 8:23, ordered = TRUE)
+
+# If you want to use the hour as a factor, might have to remove the random effects?
+model_df$hour <- factor(model_df$hour, levels = 8:23, ordered = TRUE)
 
 fit_model <- function(formula, data, file_prefix) {
   control <- glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 10000))
-  model <- glmer(formula, data = data, family = binomial)
+  model <- glmer(formula, data = data, family = binomial, control = control)
   capture.output(summary(model), file = paste0(PLOTS_DIR, file_prefix, "_model.txt"))
   return(model)
 }
@@ -82,7 +84,7 @@ plot_base_model <- function(model) {
 
 # Model without any extra stuff
 base_model <- fit_model(
-  response ~ day + hour + (1 + day + hour | p_id),
+  response ~ day + hour + (1 + day | p_id),
   model_df,
   "base"
 )
