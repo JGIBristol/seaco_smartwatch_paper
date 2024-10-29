@@ -1,0 +1,93 @@
+library(lme4)
+library(ggeffects)
+library(tidyverse)
+library(sjPlot)
+library(dplyr)
+library(scales)
+library(ggplot2)
+library(lmerTest)
+
+# Constants
+PLOTS_DIR <- "outputs/imgs/three_level/"
+dir.create(PLOTS_DIR, showWarnings = TRUE)
+
+# Read the data
+# This is a CSV that just tells us whether the prompt sent to a participant was responded to or not
+model_df <- read_csv("outputs/data/three_level_data.csv")
+model_df <- data.frame(model_df)
+# model_df$hour <- factor(model_df$hour, levels = 8:23, ordered = TRUE)
+
+fit_model <- function(formula, data, file_prefix) {
+  control <- glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 10000))
+  model <- glmer(formula, data = data, family = binomial)
+  capture.output(summary(model), file = paste0(PLOTS_DIR, file_prefix, "_model.txt"))
+  return(model)
+}
+
+# plot_sex_model <- function(model, file_prefix, y_label) {
+#   df <- ggpredict(model, terms = c("day", "sex"))
+#
+#   plot <- ggplot(df, aes(x, predicted)) +
+#     geom_line(aes(linetype = group, color = group)) +
+#     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
+#     xlab("Study Day") +
+#     ylab(y_label) +
+#     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
+#     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
+#     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
+#     labs(fill = "", color = "", linetype = "") +
+#     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+#     scale_x_continuous(breaks = seq(1, 7, 1))
+#
+#   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
+# }
+#
+# plot_age_model <- function(model, file_prefix, y_label) {
+#   df <- ggpredict(model, terms = c("day", "age_group"))
+#
+#   plot <- ggplot(df, aes(x, predicted)) +
+#     geom_line(aes(linetype = group, color = group)) +
+#     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
+#     xlab("Study Day") +
+#     ylab(y_label) +
+#     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
+#     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
+#     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Children", "1" = "Adolescents")) +
+#     labs(fill = "", color = "", linetype = "") +
+#     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+#     scale_x_continuous(breaks = seq(1, 7, 1))
+#
+#   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
+# }
+
+plot_base_model <- function(model) {
+  plot <- plot_model(model, type = "pred", terms = c("day"), show.rug = FALSE, ci.lvl = 0.95) +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(1, 7, 1)) +
+    ggtitle("") +
+    xlab("Study Day") +
+    ylab("Response Rate") +
+    labs(fill = "", color = "")
+  ggsave(paste0(PLOTS_DIR, "base_model_day.png"), plot)
+
+  plot <- plot_model(model, type = "pred", terms = c("hour"), show.rug = FALSE, ci.lvl = 0.95) +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(8, 23, 1)) +
+    ggtitle("") +
+    xlab("Prompt Hour") +
+    ylab("Response Rate") +
+    labs(fill = "", color = "")
+  ggsave(paste0(PLOTS_DIR, "base_model_hour.png"), plot)
+}
+
+# Model without any extra stuff
+base_model <- fit_model(
+  response ~ day + hour + (1 + day + hour | p_id),
+  model_df,
+  "base"
+)
+plot_base_model(base_model)
+
+# Model with sex
+
+# Mpdel with age group
