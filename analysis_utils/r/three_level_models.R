@@ -28,24 +28,7 @@ fit_model <- function(formula, data, file_prefix) {
   capture.output(summary(model), file = paste0(PLOTS_DIR, file_prefix, "_model.txt"))
   return(model)
 }
-#
-# plot_age_model <- function(model, file_prefix, y_label) {
-#   df <- ggpredict(model, terms = c("day", "age_group"))
-#
-#   plot <- ggplot(df, aes(x, predicted)) +
-#     geom_line(aes(linetype = group, color = group)) +
-#     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
-#     xlab("Study Day") +
-#     ylab(y_label) +
-#     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
-#     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Children", "1" = "Adolescents")) +
-#     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Children", "1" = "Adolescents")) +
-#     labs(fill = "", color = "", linetype = "") +
-#     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
-#     scale_x_continuous(breaks = seq(1, 7, 1))
-#
-#   ggsave(paste0(PLOTS_DIR, file_prefix, "_model.png"), plot)
-# }
+
 
 plot_base_model <- function(model) {
   plot <- plot_model(model, type = "pred", terms = c("day"), show.rug = FALSE, ci.lvl = 0.95) +
@@ -83,8 +66,10 @@ plot_sex_model <- function(model) {
   ggsave(paste0(PLOTS_DIR, "sex_model_day.png"), plot)
 
   df_hour <- ggpredict(model, terms = c("hour", "sex"))
+  print(df_hour)
   plot <- ggplot(df_hour, aes(x, predicted)) +
-    geom_line(aes(linetype = group, color = group)) +
+    geom_point(aes(color = group), size = 3) +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
     xlab("Hour") +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
@@ -92,9 +77,39 @@ plot_sex_model <- function(model) {
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
     labs(fill = "", color = "", linetype = "") +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
-    scale_x_continuous(breaks = seq(1, 7, 1))
+    scale_x_discrete(breaks = seq(9, 20, 1))
   ggsave(paste0(PLOTS_DIR, "sex_model_hour.png"), plot)
+}
 
+
+plot_age_model <- function(model) {
+  df_day <- ggpredict(model, terms = c("day", "age_group"))
+  plot <- ggplot(df_day, aes(x, predicted)) +
+    geom_line(aes(linetype = group, color = group)) +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
+    xlab("Study Day") +
+    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
+    labs(fill = "", color = "", linetype = "") +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_continuous(breaks = seq(1, 7, 1))
+  ggsave(paste0(PLOTS_DIR, "age_model_day.png"), plot)
+
+  df_hour <- ggpredict(model, terms = c("hour", "age_group"))
+  print(df_hour)
+  plot <- ggplot(df_hour, aes(x, predicted)) +
+    geom_point(aes(color = group), size = 3) +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
+    geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
+    xlab("Hour") +
+    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
+    labs(fill = "", color = "", linetype = "") +
+    scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
+    scale_x_discrete(breaks = seq(9, 20, 1))
+  ggsave(paste0(PLOTS_DIR, "age_model_hour.png"), plot)
 }
 
 # Model without any extra stuff
@@ -113,4 +128,10 @@ sex_model <- fit_model(
 )
 plot_sex_model(sex_model)
 
-# Mpdel with age group
+# Model with age group
+age_model <- fit_model(
+  response ~ day * age_group * hour + (1 + day | p_id),
+  model_df,
+  "age"
+)
+plot_age_model(age_model)
