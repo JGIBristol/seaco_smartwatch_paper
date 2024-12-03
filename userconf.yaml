@@ -2,4 +2,6 @@
 # If you're on Windows and have mounted this on Z:, it will just be "Z:"
 # If you're on WSL and have mounted it on Z:, it might be "/mnt/z/"
 # If you're on Linux, it will be something else
+# Mount with e.g.
+# mount -v -t cifs //rdsfcifs.acrc.bris.ac.uk/SEACOCH20 /mnt/z/ -o username=mh19137,workgroup=UOB
 seaco_dir: "/mnt/z/"
