@@ -1,6 +1,10 @@
 # seaco_smartwatch_paper
 Malaysia SEACO-CH20 Smartwatch Feasibility Study
 
+## Data
+First thing to do is to get access to the SEACO RDSF - ask the PI for this.
+Then you'll need to mount it somewhere - the mount location that I used is in `userconf.yml`.
+
 ## Environment
 Run `conda create -f environment.yml` to create an environment that contains all the required packages,
 including R, python and the required libraries.
@@ -11,7 +15,7 @@ Approximately correspond to the order of things in the paper:
  - [demographic_summary.ipynb](demographic_summary.ipynb): stats on the participant demographics
  - [survey.ipynb](survey.ipynb): quantitative results from the survey
  - [meal_stats.ipynb](meal_stats.ipynb): statistics on the numbers of meals, snacks, etc. per day
- - [binomial_models.ipynb](binomial_models.ipynb): linear models for completion and compliance rate as the study progesses
+ - [three_level_model.ipynb](three_level_model.ipynb): linear models for response rate as the study progesses
 
 ### Linear Models
 If you're just interested in the linear model: [binomial_models.R](analysis_utils/r/binomial_models.R).  
