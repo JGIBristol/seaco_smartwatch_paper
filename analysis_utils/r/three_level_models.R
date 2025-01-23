@@ -38,7 +38,7 @@ plot_base_model <- function(model) {
     xlab("Study Day") +
     ylab("Response Rate") +
     labs(fill = "", color = "")
-  ggsave(paste0(PLOTS_DIR, "base_model_day.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "base_model_day.png"), plot, dpi=300)
 
   plot <- plot_model(model, type = "pred", terms = c("hour"), show.rug = FALSE, ci.lvl = 0.95) +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
@@ -47,7 +47,7 @@ plot_base_model <- function(model) {
     xlab("Prompt Hour") +
     ylab("Response Rate") +
     labs(fill = "", color = "")
-  ggsave(paste0(PLOTS_DIR, "base_model_hour.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "base_model_hour.png"), plot, dpi=300)
 }
 
 
@@ -63,7 +63,7 @@ plot_sex_model <- function(model) {
     labs(fill = "", color = "", linetype = "") +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1))
-  ggsave(paste0(PLOTS_DIR, "sex_model_day.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "sex_model_day.png"), plot, dpi=300)
 
   df_hour <- ggpredict(model, terms = c("hour", "sex"))
   print(df_hour)
@@ -78,7 +78,7 @@ plot_sex_model <- function(model) {
     labs(fill = "", color = "", linetype = "") +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_discrete(breaks = seq(9, 20, 1))
-  ggsave(paste0(PLOTS_DIR, "sex_model_hour.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "sex_model_hour.png"), plot, dpi=300)
 }
 
 
@@ -94,7 +94,7 @@ plot_age_model <- function(model) {
     labs(fill = "", color = "", linetype = "") +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1))
-  ggsave(paste0(PLOTS_DIR, "age_model_day.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "age_model_day.png"), plot, dpi=300)
 
   df_hour <- ggpredict(model, terms = c("hour", "age_group"))
   print(df_hour)
@@ -109,7 +109,7 @@ plot_age_model <- function(model) {
     labs(fill = "", color = "", linetype = "") +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_discrete(breaks = seq(9, 20, 1))
-  ggsave(paste0(PLOTS_DIR, "age_model_hour.png"), plot)
+  ggsave(paste0(PLOTS_DIR, "age_model_hour.png"), plot, dpi=300)
 }
 
 # Model without any extra stuff
