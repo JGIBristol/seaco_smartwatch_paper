@@ -473,6 +473,6 @@ def cleaned_survey() -> pd.DataFrame:
     survey_df = survey_df[survey_df["residents_id"] != 10214]
 
     # Remove participant who deleted the data
-    survey_df = survey_df[survey_df["residents_id"] != 15671]
+    # survey_df = survey_df[survey_df["residents_id"] != 15671]
 
     return survey_df
