@@ -9,6 +9,8 @@ Then you'll need to mount it somewhere - the mount location that I used is in `u
 Run `conda create -f environment.yml` to create an environment that contains all the required packages,
 including R, python and the required libraries.
 
+If you have trouble with this, try installing R and python separately.
+
 ## Notebooks
 Approximately correspond to the order of things in the paper:
 
@@ -18,8 +20,11 @@ Approximately correspond to the order of things in the paper:
  - [three_level_model.ipynb](three_level_model.ipynb): linear models for response rate as the study progesses
 
 ### Linear Models
-If you're just interested in the linear model: [binomial_models.R](analysis_utils/r/binomial_models.R).  
-The notebook at binomial_models.ipynb runs this R script.
+If you're just interested in the linear model: [three_level_models.R](analysis_utils/r/three_level_models.R).  
+
+The notebook `three_level_model.ipynb` creates a .csv file for boolean response/not for each hour/day/participant.
+Then runs the models in an R subprocess, then calculates odds ratios based on the log odds
+in the files output from the R scripts (which ive copied over manually).
 
 There are also additional notebooks and R scripts in `old_stuff/`, but these are either outdated or irrelevant for the paper.
 I've kept them here just in case...
