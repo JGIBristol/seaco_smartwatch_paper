@@ -37,6 +37,7 @@ plot_base_model <- function(model) {
     ggtitle("") +
     xlab("Study Day") +
     ylab("Response Rate") +
+    theme_bw() +
     labs(fill = "", color = "")
   ggsave(paste0(PLOTS_DIR, "base_model_day.png"), plot, dpi=300)
 
@@ -46,6 +47,7 @@ plot_base_model <- function(model) {
     ggtitle("") +
     xlab("Prompt Hour") +
     ylab("Response Rate") +
+    theme_bw() +
     labs(fill = "", color = "")
   ggsave(paste0(PLOTS_DIR, "base_model_hour.png"), plot, dpi=300)
 }
@@ -61,12 +63,12 @@ plot_sex_model <- function(model) {
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
     labs(fill = "", color = "", linetype = "") +
+    theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1))
   ggsave(paste0(PLOTS_DIR, "sex_model_day.png"), plot, dpi=300)
 
   df_hour <- ggpredict(model, terms = c("hour", "sex"))
-  print(df_hour)
   plot <- ggplot(df_hour, aes(x, predicted)) +
     geom_point(aes(color = group), size = 3) +
     geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
@@ -76,6 +78,7 @@ plot_sex_model <- function(model) {
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
     labs(fill = "", color = "", linetype = "") +
+    theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_discrete(breaks = seq(9, 20, 1))
   ggsave(paste0(PLOTS_DIR, "sex_model_hour.png"), plot, dpi=300)
@@ -92,12 +95,12 @@ plot_age_model <- function(model) {
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
     labs(fill = "", color = "", linetype = "") +
+    theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1))
   ggsave(paste0(PLOTS_DIR, "age_model_day.png"), plot, dpi=300)
 
   df_hour <- ggpredict(model, terms = c("hour", "age_group"))
-  print(df_hour)
   plot <- ggplot(df_hour, aes(x, predicted)) +
     geom_point(aes(color = group), size = 3) +
     geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
@@ -107,6 +110,7 @@ plot_age_model <- function(model) {
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
     labs(fill = "", color = "", linetype = "") +
+    theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_discrete(breaks = seq(9, 20, 1))
   ggsave(paste0(PLOTS_DIR, "age_model_hour.png"), plot, dpi=300)
@@ -114,7 +118,7 @@ plot_age_model <- function(model) {
 
 # Model without any extra stuff
 base_model <- fit_model(
-  response ~ day * hour + (1 + day | p_id),
+  response ~ day + hour + (1 + day | p_id),
   model_df,
   "base"
 )
@@ -122,7 +126,7 @@ plot_base_model(base_model)
 
 # Model with sex
 sex_model <- fit_model(
-  response ~ day * sex * hour + (1 + day | p_id),
+  response ~ day * sex + hour + (1 + day | p_id),
   model_df,
   "sex"
 )
@@ -130,7 +134,7 @@ plot_sex_model(sex_model)
 
 # Model with age group
 age_model <- fit_model(
-  response ~ day * age_group * hour + (1 + day | p_id),
+  response ~ day * age_group + hour + (1 + day | p_id),
   model_df,
   "age"
 )
