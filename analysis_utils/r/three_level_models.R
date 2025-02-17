@@ -91,9 +91,9 @@ plot_age_model <- function(model) {
     geom_line(aes(linetype = group, color = group)) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
     xlab("Study Day") +
-    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
-    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
-    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
+    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     labs(fill = "", color = "", linetype = "") +
     theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
@@ -106,9 +106,9 @@ plot_age_model <- function(model) {
     geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
     xlab("Hour") +
-    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
-    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12", "1" = "13-18")) +
-    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12", "1" = "13-18")) +
+    scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
+    scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
+    scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     labs(fill = "", color = "", linetype = "") +
     theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
