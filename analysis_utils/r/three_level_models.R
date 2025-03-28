@@ -53,6 +53,16 @@ plot_base_model <- function(model) {
     theme_bw() +
     labs(fill = "", color = "")
   ggsave(paste0(PLOTS_DIR, "base_model_period.png"), plot, dpi=300)
+
+  # Plot the variance between participants
+  variance_components <- VarCorr(model)
+  print(variance_components)
+
+  # intraclass correlation coefficient
+  between_variance <- as.numeric(variance_components$p_id[1])  # Variance of random intercept
+  within_variance <- pi^2 / 3  # Residual variance in logistic models
+  ICC <- between_variance / (between_variance + within_variance)
+  print(ICC)
 }
 
 
