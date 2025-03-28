@@ -19,8 +19,8 @@ model_df <- data.frame(model_df)
 # Get rid of rows where hour is 8, 21, 22, or 23
 model_df <- model_df %>% filter(hour %in% 9:20)
 
-# If you want to use the hour as a factor, might have to remove the random effects?
-model_df$hour <- factor(model_df$hour, levels = 9:20, ordered = TRUE)
+# model_df$hour <- factor(model_df$hour, levels = 9:20, ordered = TRUE)
+model_df$period <- factor(model_df$period, levels = 1:4, ordered = FALSE)
 
 fit_model <- function(formula, data, file_prefix) {
   control <- glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 10000))
