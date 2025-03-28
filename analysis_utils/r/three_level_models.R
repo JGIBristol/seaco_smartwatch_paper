@@ -62,7 +62,16 @@ plot_base_model <- function(model) {
   between_variance <- as.numeric(variance_components$p_id[1])  # Variance of random intercept
   within_variance <- pi^2 / 3  # Residual variance in logistic models
   ICC <- between_variance / (between_variance + within_variance)
-  print(ICC)
+  cat("ICC: ", round(ICC, 4), "\n")
+
+  # Odds ratio
+  OR <- exp(fixef(model))
+  print("Odds ratio")
+  print(OR)
+
+  CI <- exp(confint(model, method = "Wald"))
+  print("Confidence intervals")
+  print(CI)
 }
 
 
@@ -94,6 +103,15 @@ plot_sex_model <- function(model) {
     theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1))
   ggsave(paste0(PLOTS_DIR, "sex_model_period.png"), plot, dpi=300)
+
+  # Odds ratio
+  OR <- exp(fixef(model))
+  print("Odds ratio")
+  print(OR)
+
+  CI <- exp(confint(model, method = "Wald"))
+  print("Confidence intervals")
+  print(CI)
 }
 
 
@@ -125,6 +143,15 @@ plot_age_model <- function(model) {
     theme_bw() +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1))
   ggsave(paste0(PLOTS_DIR, "age_model_period.png"), plot, dpi=300)
+
+  # Odds ratio
+  OR <- exp(fixef(model))
+  print("Odds ratio")
+  print(OR)
+
+  CI <- exp(confint(model, method = "Wald"))
+  print("Confidence intervals")
+  print(CI)
 }
 
 # Model without any extra stuff
