@@ -23,8 +23,11 @@ Approximately correspond to the order of things in the paper:
 If you're just interested in the linear model: [three_level_models.R](analysis_utils/r/three_level_models.R).  
 
 The notebook `three_level_model.ipynb` creates a .csv file for boolean response/not for each hour/day/participant.
-Then runs the models in an R subprocess, then calculates odds ratios based on the log odds
-in the files output from the R scripts (which ive copied over manually).
+
+Then run `Rscript analysis_utils/r/three_level_models.R` to get the full output.
+
+Unfortunately the code here is a bit of a mess so you might have to do a fair amount of
+reading through source code
 
 There are also additional notebooks and R scripts in `old_stuff/`, but these are either outdated or irrelevant for the paper.
 I've kept them here just in case...
