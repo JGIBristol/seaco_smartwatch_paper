@@ -23,11 +23,15 @@ Approximately correspond to the order of things in the paper:
 If you're just interested in the linear model: [three_level_models.R](analysis_utils/r/three_level_models.R).  
 
 The notebook `three_level_model.ipynb` creates a .csv file for boolean response/not for each hour/day/participant.
+It also prints some stuff like the median of the mean response rate per day, etc. (which are also in the paper).
 
 Then run `Rscript analysis_utils/r/three_level_models.R` to get the full output.
 
 Unfortunately the code here is a bit of a mess so you might have to do a fair amount of
-reading through source code
+reading through source code - there's a helper library in `analysis_utils/`, somewhere
+
+There are also other notebooks for things like the survey responses, the participant demographics (age, sex etc).
+If you're reading this far because you've inherited the project and have to answer reviewer comments, good luck
 
 There are also additional notebooks and R scripts in `old_stuff/`, but these are either outdated or irrelevant for the paper.
 I've kept them here just in case...
