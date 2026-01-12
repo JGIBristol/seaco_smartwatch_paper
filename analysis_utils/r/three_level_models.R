@@ -1,3 +1,13 @@
+# Install packages if not already installed
+required_packages <- c("lme4", "ggeffects", "tidyverse", "sjPlot", "dplyr", "scales", "ggplot2", "lmerTest")
+
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org")
+    library(pkg, character.only = TRUE)
+  }
+}
+
 library(lme4)
 library(ggeffects)
 library(tidyverse)
@@ -39,8 +49,8 @@ plot_base_model <- function(model) {
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     scale_x_continuous(breaks = seq(1, 7, 1)) +
     ggtitle("") +
-    xlab("Study Day") +
-    ylab("Response Rate") +
+    xlab("Study day") +
+    ylab("Response rate") +
     theme_bw() +
     labs(fill = "", color = "")
   ggsave(paste0(PLOTS_DIR, "base_model_day.png"), plot, dpi=300)
@@ -48,8 +58,8 @@ plot_base_model <- function(model) {
   plot <- plot_model(model, type = "pred", terms = c("period"), show.rug = FALSE, ci.lvl = 0.95) +
     scale_y_continuous(limits = c(0.0, 1.05), label = percent_format(accuracy = 10), breaks = seq(0, 1, 0.1)) +
     ggtitle("") +
-    xlab("Prompt Time") +
-    ylab("Response Rate") +
+    xlab("Prompt time") +
+    ylab("Response rate") +
     theme_bw() +
     labs(fill = "", color = "")
   ggsave(paste0(PLOTS_DIR, "base_model_period.png"), plot, dpi=300)
@@ -80,7 +90,8 @@ plot_sex_model <- function(model) {
   plot <- ggplot(df_day, aes(x, predicted)) +
     geom_line(aes(linetype = group, color = group)) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
-    xlab("Study Day") +
+    xlab("Study day") +
+    ylab("Predicted") +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
@@ -95,7 +106,8 @@ plot_sex_model <- function(model) {
     geom_point(aes(color = group), size = 3) +
     geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
-    xlab("Prompt Time") +
+    xlab("Prompt time") +
+    ylab("Predicted") +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "Male", "1" = "Female")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "Male", "1" = "Female")) +
@@ -120,7 +132,8 @@ plot_age_model <- function(model) {
   plot <- ggplot(df_day, aes(x, predicted)) +
     geom_line(aes(linetype = group, color = group)) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
-    xlab("Study Day") +
+    ylab("Predicted") +
+    xlab("Study day") +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
@@ -135,7 +148,8 @@ plot_age_model <- function(model) {
     geom_point(aes(color = group), size = 3) +
     geom_errorbar(aes(ymin = conf.low, ymax = conf.high, color = group), width = 0.2) +
     geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = group), alpha = 0.2) +
-    xlab("Prompt Time") +
+    xlab("Prompt time") +
+    ylab("Predicted") +
     scale_fill_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     scale_color_manual(values = c("0" = "blue", "1" = "red"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
     scale_linetype_manual(values = c("0" = "dashed", "1" = "solid"), labels = c("0" = "7-12 years", "1" = "13-18 years")) +
